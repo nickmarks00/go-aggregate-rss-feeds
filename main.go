@@ -30,6 +30,13 @@ func main() {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
+	v1Router := chi.NewRouter()
+
+	v1Router.Get("/healthz", handlerReadiness) // only allow GET requests here
+	v1Router.Get("/err", handlerErr)           // only allow GET requests here
+
+	router.Mount("/v1", v1Router) // nesting routers
+
 	srv := &http.Server{
 		Handler: router,
 		Addr:    ":" + portString,
